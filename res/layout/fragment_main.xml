@@ -84,19 +84,16 @@
         android:text="@string/chat_history"
         android:textColor="@color/light_blue"/>
 
-	<ScrollView
-         android:layout_width="match_parent"
-         android:layout_height="160dp"
-         android:scrollbars="vertical">
-        <TextView
+	
+        <ListView
             android:id="@+id/chat_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="160dp"
+            android:scrollbars="vertical"
             android:background="@color/white"
             android:textColor="@color/black"
             android:padding="4dip"
             android:typeface="monospace"
             />
-    </ScrollView>
 
 </LinearLayout>

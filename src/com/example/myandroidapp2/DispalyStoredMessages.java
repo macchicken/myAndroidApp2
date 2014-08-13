@@ -13,11 +13,10 @@ public class DispalyStoredMessages extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dispaly_stored_messages);
-		TextView textView = new TextView(this);
+		TextView textView = (TextView) findViewById(R.id.stored_view);
 		String message=getIntent().getStringExtra(MainActivity.EXTRA_MESS);
 		textView.setTextSize(40);
 		textView.setText(message);
-		setContentView(textView);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);//can travel back to parent
 		}

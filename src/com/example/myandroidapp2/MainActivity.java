@@ -17,7 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.myandroidapp2.util.CommonUtils;
@@ -28,19 +30,23 @@ public class MainActivity extends Activity {
 	public static final String EXTRA_MESS = "com.example.myandroidapp2.message";
 	public static final String EXTRA_MESS_B = "com.example.myandroidapp2.message_b";
 	private static MesssageTracer my = MesssageTracer.getInstance();
-	private TextView chatView;
+//	private TextView chatView;
+	private ListView chatView;
 	private String fileName="";
+	private ArrayAdapter<String> itemsAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_main);
-		chatView=(TextView) findViewById(R.id.chat_view);
+		chatView=(ListView) findViewById(R.id.chat_view);
 		fileName=getApplicationContext().getFilesDir().getAbsolutePath()+"/internal";
 //		if (savedInstanceState == null) {
 //			getFragmentManager().beginTransaction()
 //					.add(R.id.container, new PlaceholderFragment()).commit();
 //		}
+		itemsAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+		chatView.setAdapter(itemsAdapter);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setHomeButtonEnabled(false);
 		}
@@ -63,12 +69,12 @@ public class MainActivity extends Activity {
 				FileOutputStream outputStream=null;
 				try {
 					outputStream =openFileOutput("internal", Context.MODE_PRIVATE);//create file if not exist
-					String temp="";
+					StringBuilder temp=new StringBuilder();
 					LinkedList<String> messages=my.getMessages();
 					for (String message:messages){
-						temp+=message;
+						temp.append(message+"\n");
 					}
-					outputStream.write(temp.getBytes());
+					outputStream.write(temp.toString().getBytes());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}finally{
@@ -89,11 +95,12 @@ public class MainActivity extends Activity {
 				intent.putExtra(EXTRA_MESS, new String(buffer));
 				startActivity(intent);
 			} catch (IOException e) {
-				System.out.println("file not exist or reading error");
+				System.out.println("file not exist or reading error "+e.getMessage());
 			}finally{
 				try {
 					input.close();
 				} catch (IOException e) {
+					System.out.println("file close error "+e.getMessage());
 				}
 			}
 				return true;
@@ -130,9 +137,10 @@ public class MainActivity extends Activity {
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 		String message = editText.getText().toString();
 		if (message!=null&!"".equals(message.trim())) {
-			Intent intent = new Intent(this, DisplayMessageActivity.class);
+			/*Intent intent = new Intent(this, DisplayMessageActivity.class);
 			intent.putExtra(EXTRA_MESS, message);
-			startActivity(intent);
+			startActivity(intent);*/
+			CommonUtils.printMessagesFromList(itemsAdapter, message,"A");
 		}
 	}
 	
@@ -140,28 +148,29 @@ public class MainActivity extends Activity {
 		EditText editText = (EditText) findViewById(R.id.edit_message_b);
 		String message = editText.getText().toString();
 		if (message!=null&&!"".equals(message.trim())) {
-			Intent intent = new Intent(this, DisplayMessageActivityB.class);
+			/*Intent intent = new Intent(this, DisplayMessageActivityB.class);
 			intent.putExtra(EXTRA_MESS_B, message);
-			startActivity(intent);
+			startActivity(intent);*/
+			CommonUtils.printMessagesFromList(itemsAdapter, message,"B");
 		}
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		CommonUtils.printMessages(chatView);
+//		CommonUtils.printMessages(chatView);
 	}
 
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		CommonUtils.printMessages(chatView);
+//		CommonUtils.printMessages(chatView);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		CommonUtils.printMessages(chatView);
+//		CommonUtils.printMessages(chatView);
 	}
 
 	@Override
