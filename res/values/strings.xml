@@ -14,5 +14,6 @@
     <string name="chat_history">chat history</string>
     <string name="title_activity_display_message_activity_b">DisplayMessageActivityB</string>
     <string name="title_activity_dispaly_stored_messages">DispalyStoredMessages</string>
+    <string name="title_activity_maintab">MaintabActivity</string>
 
 </resources>
