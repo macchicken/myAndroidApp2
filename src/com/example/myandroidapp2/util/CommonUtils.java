@@ -38,7 +38,7 @@ public class CommonUtils {
 	public static void printMessagesFromList(ArrayAdapter<String> itemsAdapter,
 			String message, String id) {
 		my.add(id, message);
-		itemsAdapter.add(message);
+		itemsAdapter.add(id+": "+message);
 	}
 	
 	/**access the contacts list in the phone database**/

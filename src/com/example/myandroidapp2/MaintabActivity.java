@@ -1,15 +1,11 @@
 package com.example.myandroidapp2;
 
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.LinkedList;
 
-import com.example.myandroidapp2.util.CommonUtils;
-import com.example.myandroidapp2.util.MesssageTracer;
-
-import dto.Person;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,8 +18,16 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+
+import com.example.myandroidapp2.backgroundSerive.ReadPhoneContacts;
+import com.example.myandroidapp2.backgroundSerive.ReadStoredChat;
+import com.example.myandroidapp2.backgroundSerive.StoreChatHistory;
+import com.example.myandroidapp2.util.CommonUtils;
+import com.example.myandroidapp2.util.MesssageTracer;
+
+import dto.Person;
 
 public class MaintabActivity extends Activity {
 
@@ -71,42 +75,22 @@ public class MaintabActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch(item.getItemId()){
 			case R.id.action_settings:
-				FileOutputStream outputStream=null;
+				FileOutputStream outputStream;
 				try {
-					outputStream =openFileOutput("internal", Context.MODE_PRIVATE);//create file if not exist
-					StringBuilder temp=new StringBuilder();
-					LinkedList<String> messages=my.getMessages();
-					for (String message:messages){temp.append(message+"\n");}
-					outputStream.write(temp.toString().getBytes());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}finally{
-					try {
-						outputStream.close();
-					} catch (IOException e) {
+					outputStream = openFileOutput("internal", Context.MODE_APPEND);
+					if (outputStream!=null) {
+						new StoreChatHistory() {
+							@Override
+							public void onPostExecute(Boolean result) {
+								if (result.booleanValue()) {showAlert("save complete");}
+							}
+						}.execute(outputStream);
 					}
+				} catch (FileNotFoundException e) {
+					showAlert("save error");
 				}
 				return true;
 			case R.id.action_search:
-			FileInputStream input = null;
-			try {
-				input= new FileInputStream(fileName);
-				byte[] buffer = new byte[input.available()];
-				if (buffer.length!=0) {
-					while (input.read(buffer) >= 0) {}
-					Intent intent = new Intent(this,DispalyStoredMessages.class);
-					intent.putExtra(EXTRA_MESS, new String(buffer));
-					startActivity(intent);
-				}
-			} catch (IOException e) {
-				System.out.println("file not exist or reading error "+e.getMessage());
-			}finally{
-				try {
-					input.close();
-				} catch (IOException e) {
-					System.out.println("file close error "+e.getMessage());
-				}
-			}
 				return true;
 			case R.id.action_web:
 				TextView webAddressView=(TextView) findViewById(R.id.web_address);
@@ -161,18 +145,42 @@ public class MaintabActivity extends Activity {
 
 		@Override	
 		public void onTabChanged(String tabId) {
-			System.out.println("21321213213 tabId-- "+tabId);
 			if ("contacts".equals(tabId)){
-				LinkedList<Person> contacts=CommonUtils.getPhoneContacts(mainContext);
-				if (contacts!=null){
-					String temp=contacts.toString();
-					temp=temp.replaceAll(", ", "");
-					temp=temp.replace("[", "");
-					temp=temp.replace("]", "");
-					contactsAdapter.add(temp);
-				}
+				new ReadPhoneContacts(){
+					@Override public void onPostExecute(String result){
+						if (result!=null){contactsAdapter.add(result);}
+					}
+				}.execute(mainContext);
+			}else if ("chatview".equals(tabId)){
+				new ReadStoredChat(){
+					@Override public void onPostExecute(String result){
+						if (result!=null){
+							TextView textView = (TextView) findViewById(R.id.stored_view);
+							textView.setTextSize(20);
+							textView.setText(result);
+						}else{
+							showAlert("no chat been stored,please use setting button to store some chats");
+						}
+					}
+				}.execute(fileName);
 			}
 		}
 		
 	}
+	
+	private void showAlert(String alertMessage){
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				MaintabActivity.this);
+		alertDialogBuilder.setMessage(alertMessage).setPositiveButton("ok", null);
+		AlertDialog alertDialog = alertDialogBuilder.create();
+		alertDialog.show();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+	}
+	
+	
 }

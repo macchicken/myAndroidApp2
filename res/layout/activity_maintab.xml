@@ -78,14 +78,6 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/web_address_input" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tab2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:paddingTop="60dp" >
 
                  <ListView
                      android:id="@+id/chat_view"
@@ -96,8 +88,29 @@
                      android:scrollbars="vertical"
                      android:textColor="@color/black"
                      android:typeface="monospace" />
-
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tab2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingTop="60dp" >
+
+                 <ScrollView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:scrollbars="vertical"
+                     android:paddingTop="60dp" >
+
+                     <TextView
+                         android:id="@+id/stored_view"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="stored chat display here"
+                         android:typeface="monospace" />
+                 </ScrollView>
+			</LinearLayout>
 
             <LinearLayout
                 android:id="@+id/tab3"

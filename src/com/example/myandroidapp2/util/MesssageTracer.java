@@ -6,6 +6,7 @@ public class MesssageTracer {
 	
 	private LinkedList<String> messages;
 	private static MesssageTracer my= new MesssageTracer();
+	private int index=0;
 	
 	public MesssageTracer() {
 		messages= new LinkedList<String>();
@@ -25,5 +26,19 @@ public class MesssageTracer {
 	public LinkedList<String> getMessages() {
 		return messages;
 	}
+	
+	public LinkedList<String> getpartOfMessages(){
+		LinkedList<String> subList = new LinkedList<String>();
+		int messesgeSize=messages.size();
+		for (int i=index;i<messesgeSize;i++){subList.add(messages.get(i));}
+		return subList;
+	}
 
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int getIndex() {
+		return index;
+	}
 }
