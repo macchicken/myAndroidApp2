@@ -5,13 +5,18 @@ import java.util.LinkedList;
 public class MesssageTracer {
 	
 	private LinkedList<String> messages;
-	private static MesssageTracer my= new MesssageTracer();
+	private static MesssageTracer my;
 	private int index=0;
 	
 	public MesssageTracer() {
 		messages= new LinkedList<String>();
 	}
 	
+	public static MesssageTracer createInstance(){
+		if (my!=null){return my;}
+		return my=new MesssageTracer(); 
+	}
+
 	public static MesssageTracer getInstance(){
 		return my;
 	}

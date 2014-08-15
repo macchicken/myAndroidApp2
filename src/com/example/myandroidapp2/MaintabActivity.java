@@ -2,7 +2,6 @@ package com.example.myandroidapp2;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.LinkedList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,21 +26,17 @@ import com.example.myandroidapp2.backgroundSerive.StoreChatHistory;
 import com.example.myandroidapp2.util.CommonUtils;
 import com.example.myandroidapp2.util.MesssageTracer;
 
-import dto.Person;
-
 public class MaintabActivity extends Activity {
 
-	public static final String EXTRA_MESS = "com.example.myandroidapp2.message";
 	private String fileName="";
 	private ListView chatView;
 	private ListView contactsView;
 	TabHost tabhost;
 	Context mainContext;
-	private myTabChangedListene l=new myTabChangedListene();
 	private ArrayAdapter<String> itemsAdapter;
 	private ArrayAdapter<String> contactsAdapter;
 	
-	private static MesssageTracer my = MesssageTracer.getInstance();
+	private static MesssageTracer my = MesssageTracer.createInstance();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +86,9 @@ public class MaintabActivity extends Activity {
 				}
 				return true;
 			case R.id.action_search:
+				Intent intent = new Intent(this,DispalyStoredMessages.class);
+				intent.putExtra(MainActivity.EXTRA_MESS, "3243244");
+				startActivity(intent);
 				return true;
 			case R.id.action_web:
 				TextView webAddressView=(TextView) findViewById(R.id.web_address);
@@ -107,7 +105,7 @@ public class MaintabActivity extends Activity {
 	
 	private void setupMultiTabs(){
 		tabhost=(TabHost) findViewById(R.id.tabHost);
-		tabhost.setOnTabChangedListener(l);
+		tabhost.setOnTabChangedListener(new myTabChangedListene());
 		tabhost.setup();
 		
 		TabSpec spec1=tabhost.newTabSpec("chat");
@@ -176,11 +174,5 @@ public class MaintabActivity extends Activity {
 		alertDialog.show();
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
-		super.onSaveInstanceState(outState);
-	}
-	
 	
 }
