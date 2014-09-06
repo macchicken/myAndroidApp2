@@ -46,4 +46,9 @@ public class MesssageTracer {
 	public int getIndex() {
 		return index;
 	}
+	
+	public void clear(){
+		messages.clear();
+		index=0;
+	}
 }

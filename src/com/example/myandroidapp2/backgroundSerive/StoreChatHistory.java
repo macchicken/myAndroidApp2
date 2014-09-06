@@ -10,18 +10,19 @@ import com.example.myandroidapp2.util.MesssageTracer;
 
 public class StoreChatHistory extends AsyncTask<FileOutputStream,Integer,Boolean> {
 	
-	private static MesssageTracer my=MesssageTracer.getInstance();
 
 	@Override
 	protected Boolean doInBackground(FileOutputStream... params) {
 		try {
-			LinkedList<String> messages=my.getpartOfMessages();
+			MesssageTracer my=MesssageTracer.getInstance();
+			LinkedList<String> messages=my.getMessages();
 			if (messages.size()!=0) {
 				StringBuilder temp=new StringBuilder();
 				for (String message : messages) {temp.append(message + "\n");}
 				params[0].write(temp.toString().getBytes());
-				int index=my.getIndex();
-				my.setIndex(index+messages.size());
+				my.clear();// clear local memory storage
+//				int index=my.getIndex();
+//				my.setIndex(index+messages.size());
 			}
 		} catch (IOException e) {
 			return false;

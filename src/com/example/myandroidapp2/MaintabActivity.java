@@ -1,7 +1,7 @@
 package com.example.myandroidapp2;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -80,8 +80,10 @@ public class MaintabActivity extends Activity {
 								if (result.booleanValue()) {showAlert("save complete");}
 							}
 						}.execute(outputStream);
+						outputStream.close();
+						itemsAdapter.clear();
 					}
-				} catch (FileNotFoundException e) {
+				} catch (IOException e) {
 					showAlert("save error");
 				}
 				return true;
@@ -174,5 +176,5 @@ public class MaintabActivity extends Activity {
 		alertDialog.show();
 	}
 
-	
+
 }

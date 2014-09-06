@@ -13,10 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class CommonUtils {
-	
-	private static MesssageTracer my = MesssageTracer.getInstance();
+
+
 	private static final String[] PHONES_PROJECTION = new String[] {
         Phone.DISPLAY_NAME, Phone.NUMBER, Photo.PHOTO_ID,Phone.CONTACT_ID };
+
 
 	//print the send messages from tracer instance
 	public static void printMessages(final TextView chatView){
@@ -25,7 +26,7 @@ public class CommonUtils {
 				@Override
 				public void run() {
 					String temp = "";
-					LinkedList<String> messages=my.getMessages();
+					LinkedList<String> messages=MesssageTracer.getInstance().getMessages();
 						for (String message : messages) {
 							temp += message + "\r\n";
 						}
@@ -37,7 +38,7 @@ public class CommonUtils {
 	//save message to instance
 	public static void printMessagesFromList(ArrayAdapter<String> itemsAdapter,
 			String message, String id) {
-		my.add(id, message);
+		MesssageTracer.getInstance().add(id, message);
 		itemsAdapter.add(id+": "+message);
 	}
 	
